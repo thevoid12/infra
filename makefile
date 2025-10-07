@@ -1,5 +1,5 @@
-include .env
-export
+bootstrap:
+	./bootstrap.sh
 
 enc-secrets:
 	@echo "Encrypting woodpecker secrets..."

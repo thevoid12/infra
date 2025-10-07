@@ -1,0 +1,19 @@
+when:
+  - event: manual
+
+steps:
+  - name: decrypt
+    image: alpine:latest
+    environment:
+      SECRET_KEY:
+        from_secret: SECRET_KEY
+    commands:
+      - apk add --no-cache openssl make bash
+      - make dec-secrets
+
+  - name: deploy
+    image: docker/compose:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker-compose up -d
