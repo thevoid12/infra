@@ -52,6 +52,10 @@ $SSH_CMD $SSH_URL << EOF
   cd "\$REPO_DIR"
   git pull
 
+  # Set executable permissions
+  chmod +x bootstrap.sh deploy.sh nginx/issue_certs.sh nginx/renew_certs.sh
+
+
   # Use environment-specific nginx configs
   if [ "$ENV" == "local" ]; then
     cp nginx/conf.d/local/* nginx/conf.d/
