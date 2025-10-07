@@ -54,6 +54,20 @@ The SECRET_KEY will be available in pipelines via from_secret: SECRET_KEY
  - Use `make make-local` or `make make-prod` to switch configurations.
  - For production, add a DNS record for `ci.example.com` pointing to your server's IP address.
 
+ ### Filling Woodpecker Environment Variables
+
+ For GitHub integration using Personal Access Token (no OAuth client needed for local):
+
+ - **WOODPECKER_GITHUB**: true
+ - **WOODPECKER_GITHUB_CLIENT**: (leave empty)
+ - **WOODPECKER_GITHUB_SECRET**: (leave empty)
+ - **WOODPECKER_ADMIN**: your_github_username
+ - **WOODPECKER_SECRET_TOKEN**: your_github_personal_access_token (repo scope)
+ - **WOODPECKER_HOST**: http://rpi-ip:8000 (for local access)
+ - **WOODPECKER_AGENT_SECRET**: some_random_secret_string
+
+ For local, remove secret syncing lines (WOODPECKER_SECRET_ENDPOINT and WOODPECKER_SECRET_TOKEN duplicate) as CI is not used. For prod, keep for automatic secret syncing from GitHub Actions.
+
  ## CI/CD
  - The infra repo has a .woodpecker.yml for manual deployment.
  - New projects with .woodpecker.yml will be automatically detected by Woodpecker via GitHub integration.

@@ -1,9 +1,3 @@
-# Source .env if exists
-ifneq (,$(wildcard .env))
-include .env
-export
-endif
-
 SECRET_KEY ?= $(shell cat .secret_key 2>/dev/null)
 
 bootstrap:
