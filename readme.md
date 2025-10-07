@@ -6,11 +6,14 @@
  ## Bootstrapping
  To bootstrap the infra on a new server or RPi:
  1. Clone this repo
- 2. For local development: Copy `.secret_key.template` to `.secret_key` and edit with your encryption key, then run `make make-local` (sets up with localhost host)
-    For production: Run `make make-prod` (sets up with ci.example.com host, SECRET_KEY from GitHub secrets)
+ 2. Copy `.env.template` to `.env` and edit with your deployment config and `SECRET_KEY`
+ 3. For local development: Run `make make-local` (sets up with localhost host)
+    For production: Run `make deploy-prod` (automates SSH deployment using `.env` values)
     This copies the appropriate env files and encrypts them.
- 3. Run `make bootstrap` or `./bootstrap.sh`
+ 4. Run `make bootstrap` or `./bootstrap.sh`
  This will decrypt secrets and start all services.
+
+ For automated deployment, use `make deploy-local` or `make deploy-prod`. Config in `.env`. SECRET_KEY from `.env` for both. Uses SSH key auth or password from `.password`.
 
  ## Secret Management
 

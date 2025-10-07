@@ -1,3 +1,9 @@
+# Source .env if exists
+ifneq (,$(wildcard .env))
+include .env
+export
+endif
+
 SECRET_KEY ?= $(shell cat .secret_key 2>/dev/null)
 
 bootstrap:
@@ -12,6 +18,14 @@ make-prod:
 	@echo "Setting up for production environment..."
 	@cp woodpecker/prod/*.env woodpecker/
 	@make enc-secrets
+
+deploy-local:
+	@echo "Deploying to local..."
+	@./deploy.sh local
+
+deploy-prod:
+	@echo "Deploying to prod..."
+	@./deploy.sh prod
 	
 enc-secrets:
 	@echo "Encrypting woodpecker secrets..."

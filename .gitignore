@@ -5,4 +5,6 @@
 /woodpecker/woodpecker-agent.env
 /woodpecker/woodpecker-server.env
 .secret_key
+.password
+.env
 
