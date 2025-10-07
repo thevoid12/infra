@@ -1,4 +1,3 @@
-SECRET_KEY = $(shell grep '^SECRET_KEY=' .env | cut -d= -f2)
 
 all-local: make-local deploy-local bootstrap # after make commit the code for the enc secrets
 

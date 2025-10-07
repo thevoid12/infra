@@ -36,6 +36,7 @@ fi
 # SSH and deploy
 $SSH_CMD $SSH_URL << EOF
   set -e
+  export SECRET_KEY="$SECRET_KEY"
   echo "Deploying $ENV to $SSH_URL..."
 
   # Check tools
