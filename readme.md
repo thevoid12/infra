@@ -6,10 +6,10 @@
  ## Bootstrapping
  To bootstrap the infra on a new server or RPi:
  1. Clone this repo
- 2. Copy `woodpecker/*.env.template` to `woodpecker/*.env` and fill in your actual values
- 3. Set SECRET_KEY environment variable (used for decrypting Woodpecker secrets)
- 4. Run `make enc-secrets` to encrypt the env files
- 5. Run `make bootstrap` or `./bootstrap.sh`
+ 2. For local development: Copy `.secret_key.template` to `.secret_key` and edit with your encryption key, then run `make make-local` (sets up with localhost host)
+    For production: Run `make make-prod` (sets up with ci.example.com host, SECRET_KEY from GitHub secrets)
+    This copies the appropriate env files and encrypts them.
+ 3. Run `make bootstrap` or `./bootstrap.sh`
  This will decrypt secrets and start all services.
 
  ## Secret Management
@@ -42,6 +42,14 @@ The SECRET_KEY will be available in pipelines via from_secret: SECRET_KEY
  2. In your GitHub repo settings, add the SECRET_KEY as an Actions secret.
  3. Update `woodpecker/woodpecker-server.env` with your GitHub PAT as `WOODPECKER_SECRET_TOKEN`.
  4. Woodpecker will automatically sync the SECRET_KEY and other secrets from GitHub.
+
+ ## Woodpecker Configuration
+
+ - Woodpecker supports local and production configurations.
+ - Local: Host set to `http://localhost:8000` for development on the same machine.
+ - Production: Host set to `https://ci.example.com` for external access.
+ - Use `make make-local` or `make make-prod` to switch configurations.
+ - For production, add a DNS record for `ci.example.com` pointing to your server's IP address.
 
  ## CI/CD
  - The infra repo has a .woodpecker.yml for manual deployment.

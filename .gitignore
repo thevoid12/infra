@@ -1,2 +1,8 @@
+/woodpecker/local/woodpecker-agent.env
+/woodpecker/local/woodpecker-server.env
+/woodpecker/prod/woodpecker-agent.env
+/woodpecker/prod/woodpecker-server.env
 /woodpecker/woodpecker-agent.env
 /woodpecker/woodpecker-server.env
+.secret_key
+
