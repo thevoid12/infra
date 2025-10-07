@@ -60,9 +60,11 @@ $SSH_CMD $SSH_URL << EOF
 
   # Run commands
   if [ "$ENV" == "local" ]; then
-    make make-local
+    cp woodpecker/local/*.env woodpecker/
+    make dec-secrets
   else
-    make make-prod
+    cp woodpecker/prod/*.env woodpecker/
+    make dec-secrets
   fi
   make bootstrap
 

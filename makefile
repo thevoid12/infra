@@ -1,4 +1,11 @@
-SECRET_KEY ?= $(shell cat .secret_key 2>/dev/null)
+ifneq (,$(wildcard .env))
+include .env
+export
+endif
+
+all-local: make-local deploy-local bootstrap # after make commit the code for the enc secrets
+
+all-prod: make-prod deploy-prod bootstrap
 
 bootstrap:
 	./bootstrap.sh\
