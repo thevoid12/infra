@@ -59,13 +59,7 @@ $SSH_CMD $SSH_URL << EOF
   fi
 
   # Run commands
-  if [ "$ENV" == "local" ]; then
-    cp woodpecker/local/*.env woodpecker/
-    make dec-secrets
-  else
-    cp woodpecker/prod/*.env woodpecker/
-    make dec-secrets
-  fi
+  make dec-wpsecrets
   make bootstrap
 
   echo "Deployment complete."

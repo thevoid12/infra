@@ -9,7 +9,7 @@ steps:
         from_secret: SECRET_KEY
     commands:
       - apk add --no-cache openssl make bash
-      - make dec-secrets
+      - make dec-wpsecrets
 
   - name: deploy
     image: docker/compose:latest

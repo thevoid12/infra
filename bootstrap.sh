@@ -7,7 +7,7 @@ echo "Bootstrapping infra..."
 # Decrypt secrets if not already decrypted
 if [ ! -f woodpecker/woodpecker-server.env ]; then
     echo "Decrypting secrets..."
-    make dec-secrets
+    make dec-wpsecrets
 fi
 
 # Start services
