@@ -1,0 +1,49 @@
+
+services:
+  woodpecker-server:
+    image: woodpeckerci/woodpecker-server:latest
+    container_name: woodpecker-server
+    restart: always
+    env_file:
+      - ./woodpecker/woodpecker-server.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # giving the Woodpecker server (and/or agent) access to the host Docker daemon.
+      - woodpecker-data:/var/lib/woodpecker # named Docker volume that stores Woodpecker’s persistent state
+    ports:
+      - "8000:8000" # Web UI
+      - "9000:9000" # RPC for agent
+    networks:
+      - infra-net
+
+  woodpecker-agent:
+    image: woodpeckerci/woodpecker-agent:latest
+    container_name: woodpecker-agent
+    restart: always
+    env_file:
+      - ./woodpecker/woodpecker-agent.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - infra-net
+
+  nginx:
+    build: ./nginx # Docker will build a custom image from the ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - /opt/certs:/etc/letsencrypt     # persistent cert storage
+      - /var/www/certbot:/var/www/certbot
+      - ./nginx/logs:/var/log/nginx
+    networks:
+      - infra-net
+
+volumes:
+  woodpecker-data:
+
+networks:
+  infra-net:
+    driver: bridge # private, isolated network inside the Docker host where containers can communicate with each other via internal IPs.
