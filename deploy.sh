@@ -41,6 +41,14 @@ $SSH_CMD $SSH_URL << EOF
 
   # Check tools
   command -v git >/dev/null 2>&1 || { echo "git not installed"; exit 1; }
+  # Clone or update repo
+  REPO_DIR=\$(basename "$REPO" .git)
+  if [ ! -d "\$REPO_DIR" ]; then
+    git clone "$REPO"
+  fi
+  cd "\$REPO_DIR"
+  git pull
+
   command -v make >/dev/null 2>&1 || { echo "make not installed"; exit 1; }
   command -v openssl >/dev/null 2>&1 || { echo "openssl not installed"; exit 1; }
 
@@ -80,13 +88,7 @@ $SSH_CMD $SSH_URL << EOF
 
   echo "Docker Compose version: $(docker-compose version --short || docker compose version --short)"
 
-  # Clone or update repo
-  REPO_DIR=\$(basename "$REPO" .git)
-  if [ ! -d "\$REPO_DIR" ]; then
-    git clone "$REPO"
-  fi
-  cd "\$REPO_DIR"
-  git pull
+
 
   # Set executable permissions
   chmod +x bootstrap.sh deploy.sh nginx/issue_certs.sh nginx/renew_certs.sh
