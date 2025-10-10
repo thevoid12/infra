@@ -40,25 +40,13 @@ err() {
   exit 1
 }
 
-# --- PRECHECKS ---
-if command -v docker &>/dev/null; then
-  log "Docker already installed: $(docker --version)"
-else
-  INSTALL_DOCKER=true
-fi
-
-if command -v docker-compose &>/dev/null || docker compose version &>/dev/null; then
-  log "Docker Compose already installed"
-else
-  INSTALL_COMPOSE=true
-fi
-
-if [[ -z "${INSTALL_DOCKER:-}" && -z "${INSTALL_COMPOSE:-}" ]]; then
-  log "Docker and Compose already installed. Skipping installation."
+# --- CHECK EXISTING INSTALLATION ---
+if command -v docker &>/dev/null && (command -v docker-compose &>/dev/null || docker compose version &>/dev/null); then
+  log "Docker and Docker Compose already installed. Skipping installation."
   exit 0
 fi
 
-# Re-run with sudo if not root
+# --- RUN AS ROOT ---
 if [[ $EUID -ne 0 ]]; then
   warn "Re-running with sudo..."
   exec sudo -E bash "$0" "$@"
@@ -87,6 +75,12 @@ if [[ "$OS" == "ubuntu" && "$CODENAME" == "bookworm" ]]; then
   OS="debian"
 fi
 
+# --- CLEAN PREVIOUS DOCKER SOURCE LIST ---
+if [[ -f /etc/apt/sources.list.d/docker.list ]]; then
+  log "Removing old Docker APT source list..."
+  rm -f /etc/apt/sources.list.d/docker.list
+fi
+
 # --- INSTALL DEPENDENCIES ---
 apt-get update -y
 apt-get install -y ca-certificates curl gnupg lsb-release
@@ -99,21 +93,19 @@ if [[ ! -f /etc/apt/keyrings/docker.gpg ]]; then
   chmod a+r /etc/apt/keyrings/docker.gpg
 fi
 
-log "Adding Docker apt repository..."
-cat <<EOF > /etc/apt/sources.list.d/docker.list
+log "Adding Docker APT repository..."
+cat <<EOF | tee /etc/apt/sources.list.d/docker.list
 deb [arch=${ARCH} signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/${OS} ${CODENAME} stable
 EOF
 
+# --- INSTALL DOCKER ENGINE + PLUGIN ---
 apt-get update -y
+log "Installing Docker packages..."
+apt-get install -y "${DOCKER_PACKAGES[@]}"
 
-# --- INSTALL DOCKER IF MISSING ---
-if [[ -n "${INSTALL_DOCKER:-}" ]]; then
-  log "Installing Docker packages..."
-  apt-get install -y "${DOCKER_PACKAGES[@]}"
-  systemctl enable docker
-  systemctl start docker
-  log "Docker installed successfully: $(docker --version)"
-fi
+# --- ENABLE AND START DOCKER SERVICE ---
+systemctl enable docker
+systemctl start docker
 
 # --- ADD USER TO DOCKER GROUP ---
 CURRENT_USER=${SUDO_USER:-$USER}
@@ -124,11 +116,9 @@ else
   log "Added '$CURRENT_USER' to docker group. Log out/in for it to apply."
 fi
 
-# --- VERIFY COMPOSE ---
-if [[ -n "${INSTALL_COMPOSE:-}" ]]; then
-  if ! command -v docker-compose &>/dev/null && ! docker compose version &>/dev/null; then
-    log "Docker Compose plugin already installed with Docker, or fallback needed"
-  fi
-fi
+# --- VERIFY INSTALLATION ---
+log "Verifying Docker installation..."
+docker --version
+docker compose version || docker-compose version || true
 
-log "Docker installation script finished."
+log "Docker installation completed successfully."
