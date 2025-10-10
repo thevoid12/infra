@@ -44,23 +44,30 @@ $SSH_CMD $SSH_URL << EOF
   command -v make >/dev/null 2>&1 || { echo "make not installed"; exit 1; }
   command -v openssl >/dev/null 2>&1 || { echo "openssl not installed"; exit 1; }
 
-  # --- Install Docker if not present ---
+    # --- Install Docker if not present ---
   if ! command -v docker &> /dev/null; then
       echo "Installing Docker..."
+
       sudo apt-get update -y
       sudo apt-get install -y ca-certificates curl gnupg lsb-release
 
+      # Determine the correct distro (ubuntu or debian)
+      DISTRO=$(awk -F= '/^ID=/{print $2}' /etc/os-release | tr -d '"')
+      CODENAME=$(lsb_release -cs)
+
       sudo install -m 0755 -d /etc/apt/keyrings
-      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      curl -fsSL https://download.docker.com/linux/${DISTRO}/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
       echo \
         "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-        https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+        https://download.docker.com/linux/${DISTRO} ${CODENAME} stable" \
         | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
       sudo apt-get update -y
       sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
       sudo systemctl enable --now docker
   fi
+
   echo "Docker version: $(docker --version)"
 
   # --- Install Docker Compose standalone if missing ---
@@ -70,6 +77,7 @@ $SSH_CMD $SSH_URL << EOF
           -o /usr/local/bin/docker-compose
       sudo chmod +x /usr/local/bin/docker-compose
   fi
+
   echo "Docker Compose version: $(docker-compose version --short || docker compose version --short)"
 
   # Clone or update repo
