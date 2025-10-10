@@ -12,7 +12,7 @@ fi
 
 # Start services
 echo "Starting services..."
-docker-compose up -d
+docker  compose up -d
 
 echo "Infra bootstrapped successfully. Woodpecker server and agent are running."
 echo "Access Woodpecker at http://localhost:8000 (or configured host)"
