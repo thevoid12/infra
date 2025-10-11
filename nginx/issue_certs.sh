@@ -23,5 +23,4 @@ else
 fi
 
 nginx -t
-nginx -s reload
 echo "Nginx setup complete ($ENV mode)."
