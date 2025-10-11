@@ -15,14 +15,14 @@ make-local:
 	@echo "Copying local woodpecker env....."
 	@cp woodpecker/local/*.env woodpecker/
 	@echo "Copying local nginx configurations....."
-	@cp -r nginx/conf.d/local/. nginx/
+	@cp -r nginx/conf.d/local/. nginx/conf.d/
 	@make enc-wpsecrets
 
 make-prod:
 	@echo "Setting up for production environment..."
 	@cp woodpecker/prod/*.env woodpecker/
 	@echo "Copying prod nginx configurations....."
-	@cp -r nginx/conf.d/prod/. nginx/
+	@cp -r nginx/conf.d/prod/. nginx/conf.d/
 	@make enc-wpsecrets
 
 deploy-local:
