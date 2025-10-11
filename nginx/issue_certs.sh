@@ -25,4 +25,7 @@ else
 fi
 
 nginx -t
-echo "Nginx setup complete ($ENV mode)."
+# Start nginx in foreground (keeps container alive)
+echo "Starting nginx in foreground..."
+exec nginx -g 'daemon off;'
+
