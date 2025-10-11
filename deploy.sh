@@ -67,6 +67,9 @@ $SSH_CMD $SSH_URL << EOF
     cp nginx/conf.d/prod/* nginx/conf.d/
   fi
 
+  # Build nginx image if Dockerfile changed
+  docker compose build nginx
+
   # Run commands
   make dec-wpsecrets
   make bootstrap

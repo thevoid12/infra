@@ -15,6 +15,9 @@ RUN mkdir -p /etc/nginx/conf.d /var/www/certbot /etc/letsencrypt /var/log/nginx
 # Generate DH params for SSL
 RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
+# Clean up any stale PID file
+RUN rm -f /var/run/nginx.pid
+
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY config.json /config.json
 COPY issue_certs.sh /issue_certs.sh
