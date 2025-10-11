@@ -38,8 +38,11 @@ deploy-prod:
 commit-files:
 	@echo "Committing files to github..."
 	@git add .
-	@git commit -m "configs updated"
-	@git push
+	@if git diff --cached --quiet; then \
+		echo "No changes to commit"; \
+	else \
+		git commit -m "configs updated" && git push; \
+	fi
 
 enc-wpsecrets:
 	@echo "Encrypting woodpecker secrets..."
