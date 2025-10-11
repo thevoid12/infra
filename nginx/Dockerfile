@@ -16,6 +16,7 @@ RUN mkdir -p /etc/nginx/conf.d /var/www/certbot /etc/letsencrypt /var/log/nginx
 RUN openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
 COPY ./conf.d/nginx.conf /etc/nginx/nginx.conf
+COPY config.json /config.json
 COPY issue_certs.sh /issue_certs.sh
 RUN chmod +x /issue_certs.sh
 
