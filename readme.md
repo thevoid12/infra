@@ -72,3 +72,6 @@ The SECRET_KEY will be available in pipelines via from_secret: SECRET_KEY
  - The infra repo has a .woodpecker.yml for manual deployment.
  - New projects with .woodpecker.yml will be automatically detected by Woodpecker via GitHub integration.
  - No manual intervention needed for new projects.
+
+rule of thumb:
+Use one server block per hostname,
