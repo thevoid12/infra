@@ -16,4 +16,6 @@ steps:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     commands:
-      - docker  compose up -d
+      - docker compose build nginx #todo: doesnt have to build everytime only if change affects the image inside it needs to build
+      - docker compose up -d
+      - docker exec nginx nginx -s reload
