@@ -14,10 +14,10 @@ fi
 echo "Starting services..."
 docker  compose up -d
 # Wait for services to be ready, then reload nginx to apply new configs
-echo "Waiting for services to start..."
-sleep 10
-echo "Reloading nginx..."
-docker exec nginx nginx -s reload || true
+# echo "Waiting for services to start..."
+# sleep 10
+# echo "Reloading nginx..."
+# docker exec nginx nginx -s reload || true
 
 
 echo "Infra bootstrapped successfully. Woodpecker server and agent are running."
