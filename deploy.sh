@@ -49,8 +49,8 @@ $SSH_CMD $SSH_URL << EOF
   cd "\$REPO_DIR"
   git pull
 
-  # Exclude generated config files from git tracking on server
-  echo "nginx/conf.d/" >> .git/info/exclude
+  # Exclude all changes from git tracking on server for deployment
+  echo "*" >> .git/info/exclude
 
   command -v make >/dev/null 2>&1 || { echo "make not installed"; exit 1; }
   command -v openssl >/dev/null 2>&1 || { echo "openssl not installed"; exit 1; }
