@@ -47,6 +47,7 @@ $SSH_CMD $SSH_URL << EOF
     git clone "$REPO"
   fi
   cd "\$REPO_DIR"
+  git reset --hard HEAD
   git pull
 
   # Exclude all changes from git tracking on server for deployment
