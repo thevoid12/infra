@@ -1,0 +1,3 @@
+ - [ ] we should make sure no port is open
+ - [ ] we should make sure woodpecker console is also accessed via nginx
+ - [ ] 
